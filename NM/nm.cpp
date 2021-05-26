@@ -175,7 +175,7 @@ std::vector<double> LU::LU_forward(std::vector<double>& b) {
     for(int k = 0; k < size_of_mat; k++) {
         long double sum = 0;
         for (int j = 0; j < k; j++) {
-            sum += (long double)L_mat[k][j] * Z_mat[k];
+            sum += (long double)L_mat[k][j] * Z_mat[j];
         }
         Z_mat[k] = (b[k] - sum) / L_mat[k][k];
     }
