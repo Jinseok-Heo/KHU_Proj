@@ -1,6 +1,6 @@
 /*
 Created by 허진석
-Difference Table
+Simpson's 3/8 rule
 */
 #include <iostream>
 #include <vector>
@@ -8,45 +8,36 @@ Difference Table
 #include <cmath>
 #include "nm.hpp"
 
-void show_Dtable(std::vector<std::vector<double>>& Dtable) {
-    int n = Dtable.size();
-    for (int i = 0; i < n; i++) {
-        for(int j = 0; j < Dtable[i].size(); j++) {
-            std::cout << std::setw(14) << std::setprecision(9) << std::fixed << Dtable[i][j];
-        }
-        std::cout << '\n';
-    }
+double func(double x) {
+    return exp(x) * sin(x);
 }
 
-void difference_table(std::vector<double>& x_val, std::vector<double>& y_val) {
-    int n = x_val.size();
-    std::vector<std::vector<double>> Dtable(n);
-    Dtable[0] = y_val;
+double integral(double a, double b, int n) {
+    double h = (b - a) / n;
+    std::vector<double> x(n + 1);
+    for (int i = 0; i < n + 1; i++) {
+        x[i] = a + h * i;
+    }
+    double sum = func(x[0]) + func(x[n]);
     for (int i = 1; i < n; i++) {
-        Dtable[i].resize(n - i);
-        for (int j = 0; j < n - i; j++) {
-            Dtable[i][j] = (Dtable[i - 1][j + 1] - Dtable[i - 1][j]);
+        if (i % 3) {
+            sum += func(x[i]) * 3;
+        }
+        else {
+            sum += func(x[i]) * 2;
         }
     }
-    show_Dtable(Dtable);
+    return sum * h * 3 / 8;
 }
 
 int main() {
     int n;
-    std::cout << "Input size of Table: ";
+    double a, b;
+    std::cout << "Input Limits of integral: ";
+    std::cin >> a >> b;
+    std::cout << "Input N: ";
     std::cin >> n;
+    std::cout << integral(a, b, n) << '\n';
 
-    std::vector<double> x_val(n);
-    std::vector<double> y_val(n);
-
-    std::cout << "Input X Values\n";
-    for(int i = 0; i < n; i++) 
-        std::cin >> x_val[i];
-    
-    std::cout << "Input Y Values\n";
-    for(int i = 0; i < n; i++) 
-        std::cin >> y_val[i];
-
-    difference_table(x_val, y_val);
     return 0;
 }
